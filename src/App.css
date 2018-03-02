@@ -36,7 +36,7 @@
 
 .grid-header-2 {
   font-size: .75rem;
-  font-weight: 400, 600;
+  font-weight: 400;
   color: #7F56C5;
 }
 
@@ -83,7 +83,6 @@
     
 }
 
-
 .grid {
 
   display: block;
@@ -129,3 +128,22 @@
 
 .grid table tr:nth-child(even) {background: #F0F0F0}
 .grid table tr:nth-child(odd) {background: #F7F7F7;}
+
+.grid table #address {
+  min-width: 150px;
+}
+
+
+select {
+  width: 120px;
+  padding: 0px 35px 5px 5px;
+  border: none;
+  outline: 0px;
+  color: #1DAFE9;
+  font-size: .75rem;
+  font-weight: 600;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url(/arrow.png) 80% / 8% no-repeat #fff;
+}

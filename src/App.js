@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-
+import myData from './data.json';   // sample data to be replaced by AJAX call.
 
 
 class SortBy extends Component {
@@ -12,18 +12,52 @@ class SortBy extends Component {
   }
 
   handleChange(event) {
-    this.setState({selectedValue: event.target.value});
+    var sortValue = event.target.value;
+    this.setState({selectedValue: sortValue});
+    this.props.onChangeSort(sortValue);
   }
 
   render() {
     return (
-      <select defaultValue={this.state.selectedValue} onChange={this.handleChange}>
-        <option value="First Name">First Name</option>
-        <option value="Last Name">Last Name</option>
-        <option value="Country">Country</option>
-        <option value="City">City</option>
-        <option value="State">State</option>
-      </select>
+      <div className="selectSortBy">
+        <select defaultValue={this.state.selectedValue} onChange={this.handleChange}>
+          <option value="firstName">First Name</option>
+          <option value="lastName">Last Name</option>
+          <option value="country">Country</option>
+          <option value="city">City</option>
+          <option value="state">State</option>
+        </select>
+      </div>
+    );
+  }
+}
+
+class ItemsPerPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { selectedValue: 10 }
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    var itemValue = event.target.value;
+    this.setState({selectedValue: itemValue});
+    this.props.onChangeItemsPerPage(itemValue);
+  }
+
+  render() {
+    return (
+      <div className="selectItems">
+        <select defaultValue={this.state.selectedValue} onChange={this.handleChange}>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="75">75</option>
+          <option value="100">100</option>
+        </select>
+      </div>
     );
   }
 }
@@ -77,50 +111,41 @@ const Grid = (props) => {
 }
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { addressesSorted: [] }
-  }
+  constructor() {
+    super();
+    this.state = { 
+      addresses: []
+    }
 
+    this.sortData = this.sortData.bind(this);
+  }
+  
   componentDidMount() {
     this.loadData();
   }
 
   loadData() {
+    // replace with AJAX call
+    const addresses = myData
 
-    //replace with AJAX
-    const addresses = [
-      {
-        "_id": 1,
-        "firstName": "Chris",
-        "lastName": "Morse",
-        "country": "USA",
-        "street": "555 My Street St",
-        "city": "Seattle",
-        "state": "WA",
-        "zip": "98101",
-        "phone": "555-555-5555"
-      },
-      {
-        "_id": 2,
-        "firstName": "Gouda",
-        "lastName": "Man",
-        "country": "USA",
-        "street": "222555 My Street St",
-        "city": "Spokane",
-        "state": "WA",
-        "zip": "98199",
-        "phone": "555-511-5555"
-      }
-    ] 
-
-    var addressesSorted = addresses;   //sort & paginate this!
-
-    console.log(addressesSorted)
-
-    this.setState({addressesSorted: addressesSorted});
+    // store addresses
+    this.setState({addresses: addresses}, () => {this.sortData('firstName')});
   }
 
+  sortData(sortBy) {
+    // sort and store addresses.
+    let addresses = this.state.addresses;
+
+    addresses.sort((a,b) => {
+      return a[sortBy] < b[sortBy] ? -1 : a[sortBy] > b[sortBy] ? 1 : 0
+    });
+    
+    this.setState({addresses: addresses});
+  }
+
+  pageData(itemsPerPage) {
+    console.log(itemsPerPage)
+  }
 
   render() {
     return (
@@ -133,31 +158,32 @@ class App extends Component {
         </nav>
 
         <div id="main">
-
           <div className="grid-header-bar">
             <div className="grid-area-1">
               <div className="grid-header-1">List of Awesome</div>
               <div className="separator">|</div>
-              <div className="grid-header-2">Sort by:</div>
+              <div className="grid-header-sortby">Sort by:</div>
               <div className="sort-by-dropdown">
-              <SortBy />
+                <SortBy onChangeSort={this.sortData} />
               </div>
             </div>
 
             <div className="grid-area-2">
-              <div className="grid-header-2">items per page:</div>
-              <div className="items-dropdown">10</div>
+              <div className="grid-header-items">items per page:</div>
+              <div className="items-dropdown">
+                <ItemsPerPage onChangeItemsPerPage={this.pageData} />
+              </div>
               <div className="paging">
                 <div className="paging-number">1-10</div>
                 <div className="grid-header-of">of</div>
-                <div className="paging-total">30</div>
+                <div className="paging-total">{this.state.addresses.length}</div>
                 <div className="paging-previous fa fa-angle-left"></div>
                 <div className="paging-next fa fa-angle-right"></div>
               </div>
             </div>
           </div>
 
-          <Grid addresses={this.state.addressesSorted} />
+          <Grid addresses={this.state.addresses} />
 
         </div>
 

@@ -25,7 +25,7 @@
 .grid-header-bar {
   display: inline;
   line-height: 30px;
-  vertical-align: bottom;
+  vertical-align: text-bottom;
 }
 
 .grid-header-1 {
@@ -34,10 +34,19 @@
   color: #7F56C5;
 }
 
-.grid-header-2 {
+.grid-header-sortby {
+  font-size: .75rem;
+  margin-top:1px;
+  font-weight: 400;
+  color: #7F56C5;
+  padding: 0px 2px 0px 0px;
+}
+
+.grid-header-items {
   font-size: .75rem;
   font-weight: 400;
   color: #7F56C5;
+  padding: 0px 2px 0px 0px;
 }
 
 .grid-area-1 {
@@ -49,7 +58,7 @@
   font-size: 1rem;
   font-weight: 300;
   color: #BCBEC0;
-  padding: 0px 5px;
+  padding: 0px 10px;
 }
 
 .grid-area-2 {
@@ -130,20 +139,41 @@
 .grid table tr:nth-child(odd) {background: #F7F7F7;}
 
 .grid table #address {
-  min-width: 150px;
+  min-width: 200px;
 }
 
+.sort-by-dropdown {}
+
+.selectSortBy {
+  width:90px;
+  overflow:hidden;
+}
+
+.selectSortBy select {
+  width: 110px;
+  background: transparent url("/arrow.png") no-repeat 70px center;
+}
+
+.selectItems {
+  width:40px;
+  overflow:hidden;
+}
+
+.selectItems select {
+  width: 70px;
+  background: transparent url("/arrow.png") no-repeat 25px center;
+}
 
 select {
-  width: 120px;
-  padding: 0px 35px 5px 5px;
-  border: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  box-sizing: content-box;
+  padding: 5px 0;
   outline: 0px;
   color: #1DAFE9;
   font-size: .75rem;
   font-weight: 600;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background: url(/arrow.png) 80% / 8% no-repeat #fff;
+  border: none;
 }
+

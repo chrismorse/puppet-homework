@@ -168,7 +168,9 @@ class Grid extends Component {
 
   render() {
     return (
+  
       <div className="grid">
+        {this.props.addresses.length === 0 ? <h1>Sorry, there is no data.</h1> : 
         <table>
           <thead>
             <tr>
@@ -184,6 +186,7 @@ class Grid extends Component {
           </thead>
           <AddressList addresses={this.props.addresses} />
         </table>
+        }
       </div>
     );
   }
@@ -213,8 +216,6 @@ class App extends Component {
 
   loadData() {
     // replace with AJAX call
-    //const addresses = myData
-
     let addresses = [];
     let createTonsOfAddresses = false;   // change this to 'true' to test with 100,000 adddresses
 

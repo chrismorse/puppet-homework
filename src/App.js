@@ -100,19 +100,49 @@ class Next extends Component {
 }
 
 
+const LongCellData = (props) => {
+  let maxWidth = props.maxWidth;
+  let data = props.data;
+  let dataShort = data.substring(0,maxWidth)
+
+  return (
+    <div>{dataShort}<span title={data}>...</span></div>
+  );
+
+}
+
 
 
 const Address = (props) => {
+  let maxWidthShort = 17;
+  let maxWidthLong = 30;
+  
   return (
       <tr>
-        <td>{props.firstName}</td>
-        <td>{props.lastName}</td>
-        <td>{props.country}</td>
-        <td>{props.address}</td>
-        <td>{props.city}</td>
-        <td>{props.state}</td>
-        <td>{props.zip}</td>
-        <td>{props.phone}</td>
+        <td>
+          {props.firstName.length > maxWidthShort ? <LongCellData data={props.firstName} maxWidth={maxWidthShort} /> : props.firstName}
+        </td>
+        <td>
+          {props.lastName.length > maxWidthShort ? <LongCellData data={props.lastName} maxWidth={maxWidthShort} /> : props.lastName}
+        </td>
+        <td>
+          {props.country.length > maxWidthShort ? <LongCellData data={props.country} maxWidth={maxWidthShort} /> : props.country}
+        </td>
+        <td>
+          {props.address.length > maxWidthLong ? <LongCellData data={props.address} maxWidth={maxWidthLong} /> : props.address}
+        </td>
+        <td>
+          {props.city.length > maxWidthShort ? <LongCellData data={props.city} maxWidth={maxWidthShort} /> : props.city}
+        </td>
+        <td>
+          {props.state.length > maxWidthShort ? <LongCellData data={props.state} maxWidth={maxWidthShort} /> : props.state}
+        </td>
+        <td>
+          {props.zip.length > maxWidthShort ? <LongCellData data={props.zip} maxWidth={maxWidthShort} /> : props.zip}
+        </td>
+        <td>
+          {props.phone.length > maxWidthShort ? <LongCellData data={props.phone} maxWidth={maxWidthShort} /> : props.phone}
+        </td>
       </tr>
   );
 }
@@ -183,7 +213,30 @@ class App extends Component {
 
   loadData() {
     // replace with AJAX call
-    const addresses = myData
+    //const addresses = myData
+
+    let addresses = [];
+    let createTonsOfAddresses = false;   // change this to 'true' to test with 100,000 adddresses
+
+    if (createTonsOfAddresses) {
+      for (let i = 0; i < 1000; i++) {
+        let person = {};
+        for (let j = 0; j < myData.length; j++ ) {
+          person._id = myData[j]['_id'] + "_" + i;
+          person.firstName = myData[j]['firstName'] + "_" + i;
+          person.lastName = myData[j]['lastName'] + "_" + i;
+          person.country = myData[j]['country'] + "_" + i;
+          person.address = myData[j]['address'] + "_" + i;
+          person.city = myData[j]['city'] + "_" + i;
+          person.state = myData[j]['state'] + "_" + i;
+          person.zip = myData[j]['zip'] + "_" + i;
+          person.phone = myData[j]['phone'] + "_" + i;
+          addresses.push({...person});
+        }
+      }
+    } else {
+      addresses = myData;
+    }
 
     // store addresses
     this.setState({addresses: addresses}, () => {this.sortData('firstName')});

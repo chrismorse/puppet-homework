@@ -122,6 +122,9 @@
   font-weight: 700;
   color: #282653;
   text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  
 }
 
 .grid table td {

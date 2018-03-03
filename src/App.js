@@ -6,26 +6,28 @@ import myData from './data.json';   // sample data to be replaced by AJAX call.
 class SortBy extends Component {
   constructor(props) {
     super(props);
-    this.state = { selectedValue: 'First Name' }
-
     this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(event) {
     var sortValue = event.target.value;
-    this.setState({selectedValue: sortValue});
     this.props.onChangeSort(sortValue);
   }
 
   render() {
     return (
+      
       <div className="selectSortBy">
-        <select defaultValue={this.state.selectedValue} onChange={this.handleChange}>
+      {console.log(this.props.sortBy)}
+        <select value={this.props.sortBy} onChange={this.handleChange}>
           <option value="firstName">First Name</option>
           <option value="lastName">Last Name</option>
           <option value="country">Country</option>
+          <option value="address">Address</option>
           <option value="city">City</option>
           <option value="state">State</option>
+          <option value="zip">Zip</option>
+          <option value="phone">Phone</option>
         </select>
       </div>
     );
@@ -124,33 +126,44 @@ const AddressList = (props) => {
   );
 }
 
+class Grid extends Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
 
-const Grid = (props) => {
-  return (
-    <div className="grid">
-      <table>
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Country</th>
-            <th id="address">Address</th>
-            <th>City</th>
-            <th>State</th>
-            <th>Zip</th>
-            <th>Phone</th>
-          </tr>
-        </thead>
-        <AddressList addresses={props.addresses} />
-      </table>
-    </div>
-  );
+  handleClick(sortBy) {
+    this.props.onClick(sortBy);
+  }
+
+  render() {
+    return (
+      <div className="grid">
+        <table>
+          <thead>
+            <tr>
+              <th onClick={() => this.handleClick("firstName")}>First Name</th>
+              <th onClick={() => this.handleClick("lastName")}>Last Name</th>
+              <th onClick={() => this.handleClick("country")}>Country</th>
+              <th id="address" onClick={() => this.handleClick("address")}>Address</th>
+              <th onClick={() => this.handleClick("city")}>City</th>
+              <th onClick={() => this.handleClick("state")}>State</th>
+              <th onClick={() => this.handleClick("zip")}>Zip</th>
+              <th onClick={() => this.handleClick("phone")}>Phone</th>
+            </tr>
+          </thead>
+          <AddressList addresses={this.props.addresses} />
+        </table>
+      </div>
+    );
+  }
 }
 
 class App extends Component {
   constructor() {
     super();
     this.state = { 
+      sortBy: "firstName",
       addresses: [],
       startIndex: 1,
       itemsPerPage: 10,
@@ -184,7 +197,7 @@ class App extends Component {
       return a[sortBy] < b[sortBy] ? -1 : a[sortBy] > b[sortBy] ? 1 : 0
     });
     
-    this.setState({addresses: addresses, startIndex: 1}, () => {this.createView()});
+    this.setState({addresses: addresses, startIndex: 1, sortBy: sortBy}, () => {this.createView()});
   }
 
   createView() {
@@ -242,7 +255,7 @@ class App extends Component {
               <div className="separator">|</div>
               <div className="grid-header-sortby">Sort by:</div>
               <div className="sort-by-dropdown">
-                <SortBy onChangeSort={this.sortData} />
+                <SortBy sortBy={this.state.sortBy} onChangeSort={this.sortData} />
               </div>
             </div>
 
@@ -261,7 +274,7 @@ class App extends Component {
             </div>
           </div>
 
-          <Grid addresses={this.state.currentView} />
+          <Grid addresses={this.state.currentView} onClick={this.sortData} />
 
         </div>
 

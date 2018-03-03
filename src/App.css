@@ -114,7 +114,6 @@
   border-radius: 0 3px 0 0;
 }
 
-
 .grid table th {
   padding: 10px;
   height: 32px;
@@ -142,8 +141,6 @@
   min-width: 200px;
 }
 
-.sort-by-dropdown {}
-
 .selectSortBy {
   width:90px;
   overflow:hidden;
@@ -168,8 +165,6 @@ select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  box-sizing: content-box;
-  padding: 5px 0;
   outline: 0px;
   color: #1DAFE9;
   font-size: .75rem;
@@ -177,3 +172,11 @@ select {
   border: none;
 }
 
+.paging-previous, .paging-next {
+  cursor: pointer;
+}
+
+.inactive {
+  color: #CACBCE;
+  cursor: default;
+}

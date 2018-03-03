@@ -63,6 +63,43 @@ class ItemsPerPage extends Component {
 }
 
 
+class Previous extends Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    this.props.onClick();
+  }
+
+  render() {
+    return (
+      <div className={"paging-previous fa fa-angle-left" + (this.props.inactive ? ' inactive' : '' )} onClick={this.handleClick}></div>
+    );
+  }
+}
+
+class Next extends Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    this.props.onClick();
+  }
+
+  render() {
+    return (
+      <div className={"paging-next fa fa-angle-right" + (this.props.inactive ? ' inactive' : '' )} onClick={this.handleClick}></div>
+    );
+  }
+}
+
+
+
+
 const Address = (props) => {
   return (
       <tr>
@@ -114,10 +151,17 @@ class App extends Component {
   constructor() {
     super();
     this.state = { 
-      addresses: []
+      addresses: [],
+      startIndex: 1,
+      itemsPerPage: 10,
+      endIndex: 10,
+      currentView: []
     }
 
     this.sortData = this.sortData.bind(this);
+    this.handleChangeItemsPerPage = this.handleChangeItemsPerPage.bind(this);
+    this.handlePrevious = this.handlePrevious.bind(this);
+    this.handleNext = this.handleNext.bind(this);
   }
   
   componentDidMount() {
@@ -133,19 +177,53 @@ class App extends Component {
   }
 
   sortData(sortBy) {
-    // sort and store addresses.
+    // sort entire list and store it sorted
     let addresses = this.state.addresses;
 
     addresses.sort((a,b) => {
       return a[sortBy] < b[sortBy] ? -1 : a[sortBy] > b[sortBy] ? 1 : 0
     });
     
-    this.setState({addresses: addresses});
+    this.setState({addresses: addresses, startIndex: 1}, () => {this.createView()});
   }
 
-  pageData(itemsPerPage) {
-    console.log(itemsPerPage)
+  createView() {
+    let startSlice = this.state.startIndex - 1;
+    if (startSlice > this.state.addresses.length) {
+      startSlice = this.state.addresses.length - this.state.itemsPerPage;
+    }
+
+    let endSlice = this.state.startIndex + this.state.itemsPerPage - 1;
+    if (endSlice > this.state.addresses.length) {
+      endSlice = this.state.addresses.length;
+    }
+
+    let currentView = this.state.addresses.slice(startSlice, endSlice);
+    this.setState({currentView: currentView, endIndex: endSlice});
   }
+
+  handleChangeItemsPerPage(itemsPerPage) {
+    this.setState({itemsPerPage: parseInt(itemsPerPage, 10), startIndex: 1}, () => {this.createView()});
+  }
+
+  handleNext() {
+    let newStartIndex = this.state.startIndex + this.state.itemsPerPage;
+    if (newStartIndex < this.state.addresses.length) {
+      this.setState({startIndex: newStartIndex}, () => {this.createView()});
+    }
+  }
+
+  handlePrevious() {
+    let newStartIndex = this.state.startIndex - this.state.itemsPerPage;
+    if (newStartIndex < 0) {
+      newStartIndex = 1;  
+    }
+    let endIndex = newStartIndex + this.state.itemsPerPage;
+
+    this.setState({startIndex: newStartIndex, endIndex: endIndex}, () => {this.createView()});
+  }
+
+
 
   render() {
     return (
@@ -171,19 +249,19 @@ class App extends Component {
             <div className="grid-area-2">
               <div className="grid-header-items">items per page:</div>
               <div className="items-dropdown">
-                <ItemsPerPage onChangeItemsPerPage={this.pageData} />
+                <ItemsPerPage onChangeItemsPerPage={this.handleChangeItemsPerPage} />
               </div>
               <div className="paging">
-                <div className="paging-number">1-10</div>
+                <div className="paging-number">{this.state.startIndex}-{this.state.endIndex}</div>
                 <div className="grid-header-of">of</div>
                 <div className="paging-total">{this.state.addresses.length}</div>
-                <div className="paging-previous fa fa-angle-left"></div>
-                <div className="paging-next fa fa-angle-right"></div>
+                <Previous onClick={this.handlePrevious} inactive={(this.state.startIndex === 1 ? true : false)}/>
+                <Next onClick={this.handleNext} inactive={(this.state.endIndex === this.state.addresses.length ? true : false)}/>
               </div>
             </div>
           </div>
 
-          <Grid addresses={this.state.addresses} />
+          <Grid addresses={this.state.currentView} />
 
         </div>
 

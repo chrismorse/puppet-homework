@@ -18,7 +18,6 @@ class SortBy extends Component {
     return (
       
       <div className="selectSortBy">
-      {console.log(this.props.sortBy)}
         <select value={this.props.sortBy} onChange={this.handleChange}>
           <option value="firstName">First Name</option>
           <option value="lastName">Last Name</option>
